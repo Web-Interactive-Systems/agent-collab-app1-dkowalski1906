@@ -1,27 +1,39 @@
 import React from "react";
-import { Flex } from "@radix-ui/themes";
+import { Flex, Button } from "@radix-ui/themes";
+import {
+  EXPRESSIONES,
+  GESTURES,
+  SYMBOLS,
+  FOOD,
+  ACTIVITIES,
+  PLACES,
+  NATURE,
+} from "../utils/emojis (1).js";
 
 export function EmojiTabs({ selectedCategory, onSelectCategory }) {
-  const categories = ["Smileys", "Animals", "Food"];
+  // Liste synchronisée avec les catégories du fichier emojis.js
+  const categories = [
+    { key: "EXPRESSIONES", label: "Smileys" },
+    { key: "GESTURES", label: "Gestes" },
+    { key: "SYMBOLS", label: "Symboles" },
+    { key: "FOOD", label: "Nourriture" },
+    { key: "ACTIVITIES", label: "Activités" },
+    { key: "PLACES", label: "Lieux" },
+    { key: "NATURE", label: "Nature" },
+  ];
 
   return (
-    <Flex gap={10} style={{ marginBottom: 10 }}>
+    <Flex gap="2" mb="2" wrap="wrap">
       {categories.map((cat) => (
-        <button
-          key={cat}
-          type="button"
-          onClick={() => onSelectCategory(cat)}
-          style={{
-            padding: "6px 12px",
-            borderRadius: 6,
-            border: "1px solid",
-            borderColor: cat === selectedCategory ? "#4f46e5" : "#ccc",
-            backgroundColor: cat === selectedCategory ? "#e0e7ff" : "white",
-            cursor: "pointer",
-          }}
+        <Button
+          key={cat.key}
+          variant={cat.label === selectedCategory ? "solid" : "outline"}
+          color={cat.label === selectedCategory ? "indigo" : "gray"}
+          onClick={() => onSelectCategory(cat.label)}
+          size="1"
         >
-          {cat}
-        </button>
+          {cat.label}
+        </Button>
       ))}
     </Flex>
   );

@@ -1,14 +1,8 @@
 import { MoonIcon, SunIcon, HomeIcon } from "@radix-ui/react-icons";
-import { Button, Flex, Box } from "@radix-ui/themes";
+import { Button, Flex } from "@radix-ui/themes";
 import { Link } from "raviger";
-import { styled } from "@stitches/react";
 
 export function Header({ isLight, switchAppearance }) {
-
-  const CleanLink = styled(Link, {
-    textDecoration: "Black"
-  });
-
   return (
     <Flex style={{ boxShadow: "var(--shadow-3)", height: 42, width: "100vw" }}>
       <Flex
@@ -20,10 +14,10 @@ export function Header({ isLight, switchAppearance }) {
         px="5"
       >
         <Flex justify="center" align="center" direction="row" gap="5">
-          <Button variant="ghost" size="4">
-            <CleanLink href="/">
+          <Button variant="ghost" size="4" asChild>
+            <Link href="/">
               <HomeIcon height="22" width="22" />
-            </CleanLink>
+            </Link>
           </Button>
         </Flex>
 

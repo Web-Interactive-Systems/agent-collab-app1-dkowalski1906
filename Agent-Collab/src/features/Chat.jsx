@@ -3,9 +3,8 @@ import ChatList from "./ChatList";
 import ChatPrompt from "./ChatPrompt";
 
 function Chat() {
-
   return (
-    <Flex direction="column" gap="4" width="100%" height="100%" p="1">
+    <Flex direction="column" gap="4" width="100%" height="100%" p="4">
       <ChatList />
       <ChatPrompt />
     </Flex>

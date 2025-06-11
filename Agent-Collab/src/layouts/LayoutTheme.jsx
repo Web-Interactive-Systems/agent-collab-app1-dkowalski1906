@@ -5,7 +5,7 @@ import { useState } from "react";
 
 export default function LayoutTheme({ children }) {
 
-  const [isLight, setIsLight] = useState(true);
+  const [isLight, setIsLight] = useState(false);
 
     const switchAppearance = () => {
         setIsLight(!isLight);

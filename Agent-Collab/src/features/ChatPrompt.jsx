@@ -1,44 +1,8 @@
 import { PaperPlaneIcon } from "@radix-ui/react-icons";
-import { Button, Flex, TextArea } from "@radix-ui/themes";
-import { styled } from "@/lib/stitches";
+import { Button, Flex, TextArea, Card } from "@radix-ui/themes";
 import { useRef, useState } from "react";
 import { $messages, addMessage, updateMessages } from "@/store/messages";
 import { onDummyAgent } from "@/actions/agent";
-
-const PromptContainer = styled(Flex, {
-  background: "var(--accent-2)",
-  borderRadius: 18,
-  border: "2px solid",
-  width: "30vw",
-  height: "50px",
-  textShadow: "none",
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  padding: "0",
-  margin: "0",
-});
-
-const PromptArea = styled(TextArea, {
-  width: "100%",
-  height: "auto",
-  minHeight: "unset",
-  padding: "0",
-  margin: "auto",
-  boxSizing: "border-box",
-  textAlign: "center",
-  boxShadow: "none",
-  outline: "none",
-  background: "none",
-  "& textarea": {
-    lineHeight: "1",
-    fontSize: "1rem",
-    fontWeight: 450,
-  },
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-});
 
 function ChatPrompt() {
   const handleAddMessage = (message) => {
@@ -84,17 +48,25 @@ function ChatPrompt() {
 
   return (
     <Flex direction="column" mt="auto" width="100%" gap="2">
-      <PromptContainer>
-        <PromptArea
-          placeholder="Comment puis-je aider..."
-          onChange={onTextChange}
-        />
-      </PromptContainer>
-      <Flex justify="start" width="100%">
-        <Button disabled={isPromptEmpty} onClick={onSendPrompt}>
-          <PaperPlaneIcon />
-        </Button>
-      </Flex>
+      <Card
+        variant="classic"
+        radius="large"
+        width="100%"
+        style={{
+          border: "2px solid var(--gray-9)",
+        }}
+      >
+        <Flex align="center" gap="2" width="100%">
+          <TextArea
+            placeholder="Comment puis-je aider..."
+            onChange={onTextChange}
+            style={{ width: "100%" }}
+          />
+          <Button disabled={isPromptEmpty} onClick={onSendPrompt}>
+            <PaperPlaneIcon />
+          </Button>
+        </Flex>
+      </Card>
     </Flex>
   );
 }

@@ -1,56 +1,89 @@
 import { $agents } from "@/store/agents";
 import { useStore } from "@nanostores/react";
 import Box from "./Box";
-import { Flex, Card, Button } from "@radix-ui/themes";
+import { Card, Button, Text } from "@radix-ui/themes";
 import { PlusIcon } from "@radix-ui/react-icons";
 
 function AgentList({ onAddClick }) {
   const cards = useStore($agents);
 
+  const BOX_WIDTH = 240;
+  const BOX_HEIGHT = 150;
+
   return (
-    <Flex
-      gap="20px"
-      display="flex"
-      justify="start"
-      align="start"
-      width="100%"
-      height="100%"
-      wrap="wrap"
+    <div
+      style={{
+        display: "flex",
+        flexWrap: "wrap",
+        width: "100%",
+        height: "100%",
+        padding: 0,
+        margin: 0,
+        overflowY: "auto",
+        minHeight: 0,
+        minWidth: 0,
+        boxSizing: "border-box",
+        alignItems: "stretch",
+        gap: 12,
+      }}
     >
-      {/* Première box "Ajouter" */}
-      <Card
-        variant="classic"
-        size="3"
-        radius="large"
+      {cards.map((agent) => (
+        <div
+          key={agent.id}
+          style={{
+            width: BOX_WIDTH,
+            height: BOX_HEIGHT,
+            margin: 0,
+            padding: 0,
+            boxSizing: "border-box",
+          }}
+        >
+          <Box agent={agent} />
+        </div>
+      ))}
+      <div
         style={{
-          width: 200,
-          height: 200,
-          backgroundColor: "#f9f9f9",
-          padding: 12,
+          width: BOX_WIDTH,
+          height: BOX_HEIGHT,
+          margin: 0,
+          padding: 0,
           boxSizing: "border-box",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          minHeight: 100,
-          cursor: "pointer",
         }}
       >
-        <Button
-          variant="ghost"
-          size="2"
-          style={{ display: "flex", alignItems: "center", gap: 8 }}
-          onClick={onAddClick}
+        <Card
+          variant="classic"
+          size="3"
+          radius="large"
+          style={{
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            cursor: "pointer",
+            border: "3px solid var(--gray-9)",
+            margin: 0,
+            boxSizing: "border-box",
+          }}
         >
-          <PlusIcon />
-          Ajouter
-        </Button>
-      </Card>
-
-      {/* Liste des agents */}
-      {cards.map((agent) => (
-        <Box key={agent.id} agent={agent} />
-      ))}
-    </Flex>
+          <Button
+            variant="ghost"
+            size="2"
+            onClick={onAddClick}
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 8,
+            }}
+          >
+            <PlusIcon />
+            <Text size="4">Ajouter</Text>
+          </Button>
+        </Card>
+      </div>
+    </div>
   );
 }
 

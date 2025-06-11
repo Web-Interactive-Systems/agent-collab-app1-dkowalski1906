@@ -5,29 +5,46 @@ import Agent from "@/features/Agent";
 
 function Home() {
   return (
-    <Flex gap="8" width="100%" height="100%">
-      <Agent />
-      <Resizable
-        class="resizable"
+    <Flex
+      gap="0"
+      width="100vw"
+      height="calc(100vh - 42px)"
+      style={{
+        width: "100vw",
+        height: "calc(100vh - 42px)",
+        minWidth: "100vw",
+        minHeight: "calc(100vh - 42px)",
+        maxWidth: "100vw",
+        maxHeight: "calc(100vh - 42px)",
+        overflow: "hidden",
+      }}
+    >
+      <Flex
+        width="70%"
+        height="100%"
         style={{
-          background: "var(--focus-a3)",
-          borderLeft: "1px solid var(--gray-9)",
-          marginLeft: "auto",
-          width: 800,
+          minWidth: 0,
+          minHeight: 0,
+          height: "100%",
+          overflow: "hidden",
         }}
-        enable={{
-          top: false,
-          right: false,
-          bottom: false,
-          left: true,
-          topRight: false,
-          bottomRight: false,
-          bottomLeft: false,
-          topLeft: false,
+      >
+        <Agent />
+      </Flex>
+      <Flex
+        width="30%"
+        height="100%"
+        style={{
+          borderLeft: "1px solid var(--gray-9)",
+          background: "var(--focus-a3)",
+          minWidth: 0,
+          minHeight: 0,
+          height: "100%",
+          overflow: "hidden",
         }}
       >
         <Chat />
-      </Resizable>
+      </Flex>
     </Flex>
   );
 }
