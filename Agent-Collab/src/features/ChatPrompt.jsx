@@ -2,13 +2,15 @@ import { PaperPlaneIcon } from "@radix-ui/react-icons";
 import { Button, Flex, TextArea } from "@radix-ui/themes";
 import { styled } from "@/lib/stitches";
 import { useRef, useState } from "react";
+import { $messages, addMessage, updateMessages } from "@/store/messages";
+import { onDummyAgent } from "@/actions/agent";
 
 const PromptContainer = styled(Flex, {
   background: "var(--accent-2)",
-  borderRadius: 100,
+  borderRadius: 18,
   border: "2px solid",
   width: "30vw",
-  height: "auto",
+  height: "50px",
   textShadow: "none",
   display: "flex",
   justifyContent: "center",
@@ -38,8 +40,11 @@ const PromptArea = styled(TextArea, {
   alignItems: "center",
 });
 
+function ChatPrompt() {
+  const handleAddMessage = (message) => {
+    addMessage(message);
+  };
 
-function ChatPrompt({ onAddMessage }) {
   const [isPromptEmpty, setIsPromptEmpty] = useState(true);
   const promptRef = useRef(null);
 
@@ -49,11 +54,32 @@ function ChatPrompt({ onAddMessage }) {
   };
 
   const onSendPrompt = async () => {
-    onAddMessage({
+    //add user message
+    handleAddMessage({
       content: promptRef.current,
       role: "user",
       id: Math.random().toString(),
     });
+
+    const messages = $messages.get();
+
+    await new Promise((resolve) =>
+      setTimeout(resolve, Math.random() * 1000 + 500)
+    );
+
+    //add assistant message
+    const response = {
+      content: "",
+      role: "assistant",
+      id: Math.random().toString(),
+    };
+    handleAddMessage(response);
+
+    //update the message for each token
+    for await (const token of onDummyAgent()) {
+      response.content += token;
+      updateMessages([...messages, response]);
+    }
   };
 
   return (

@@ -2,6 +2,8 @@
 import { FaceIcon, PersonIcon } from "@radix-ui/react-icons";
 import { Box, Flex } from "@radix-ui/themes";
 import { styled } from "@stitches/react";
+import { useStore } from "@nanostores/react";
+import { $messages } from "@/store/store";
 
 export const ListContainer = styled(Box, {
   background: "Indigo",
@@ -14,7 +16,10 @@ export const ListContainer = styled(Box, {
   textShadow: "none",
 });
 
-function ChatList({ messages }) {
+function ChatList() {
+
+  const messages = useStore($messages);
+  
   return (
     <Flex direction="column" gap="2">
       {messages.map((message) => (
@@ -24,7 +29,11 @@ function ChatList({ messages }) {
         >
           <ListContainer>
             <Flex align="center" gap="2">
-              {message.role === "user" ? <PersonIcon height="22px" width="22px" /> : <FaceIcon height="35px" width="35px" />}
+              {message.role === "user" ? (
+                <PersonIcon height="22px" width="22px" />
+              ) : (
+                <FaceIcon height="22px" width="22px" />
+              )}
               <Box>{message.content}</Box>
             </Flex>
           </ListContainer>

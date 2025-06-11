@@ -8,11 +8,6 @@ export const onDummyAgent = async function* () {
     "D'accord ! Voici une réponse simulée basée sur ta demande.",
   ];
 
-  // Simuler a retard avant le premier token
-  await new Promise((resolve) =>
-    setTimeout(resolve, Math.random() * 1000 + 500)
-  );
-
   // Sélectionner une réponse random
   const response =
     mockResponses[Math.floor(Math.random() * mockResponses.length)];
