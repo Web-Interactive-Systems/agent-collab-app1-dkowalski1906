@@ -1,10 +1,14 @@
 import { Flex } from "@radix-ui/themes";
 import AgentList from "./AgentList";
-import Formulaire from "./Formulaire";
+import Formulaire from "./AgentForm";
 import { useState } from "react";
 
 function Agent() {
-  const [isFormVisible, setFormVisible] = useState(false);
+  const [formState, setFormState] = useState({ visible: false, agent: null });
+
+  const handleAddClick = () => setFormState({ visible: true, agent: null });
+  const handleEditClick = (agent) => setFormState({ visible: true, agent });
+  const handleClose = () => setFormState({ visible: false, agent: null });
 
   return (
     <Flex
@@ -15,7 +19,7 @@ function Agent() {
       minWidth="0"
       style={{
         overflow: "hidden",
-        background: isFormVisible ? "rgba(10,10,20,0.92)" : "unset",
+        background: formState.visible ? "rgba(10,10,20,0.92)" : "unset",
         transition: "background 0.2s",
       }}
     >
@@ -32,9 +36,9 @@ function Agent() {
           margin: 15,
         }}
       >
-        <AgentList onAddClick={() => setFormVisible(true)} />
+        <AgentList onAddClick={handleAddClick} onEditClick={handleEditClick} />
       </Flex>
-      {isFormVisible && (
+      {formState.visible && (
         <Flex
           position="absolute"
           top="0"
@@ -51,7 +55,7 @@ function Agent() {
             overflow: "hidden",
             display: "flex",
           }}
-          onClick={() => setFormVisible(false)}
+          onClick={handleClose}
         >
           <Flex
             position="relative"
@@ -80,7 +84,11 @@ function Agent() {
               transition: "background 0.2s",
             }}
           >
-            <Formulaire onClose={() => setFormVisible(false)} />
+            <Formulaire
+              onClose={handleClose}
+              agent={formState.agent}
+              isEdit={!!formState.agent}
+            />
           </Flex>
         </Flex>
       )}

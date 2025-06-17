@@ -8,7 +8,7 @@ import {
   ACTIVITIES,
   PLACES,
   NATURE,
-} from "../utils/emojis (1).js";
+} from "../../utils/emojis.js";
 
 export function EmojiTabs({ selectedCategory, onSelectCategory }) {
   // Liste synchronisée avec les catégories du fichier emojis.js

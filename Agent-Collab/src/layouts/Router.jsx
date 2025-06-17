@@ -3,10 +3,12 @@ import { useEffect } from "react";
 import Counter from "@/components/Counter";
 import LayoutTheme from "./LayoutTheme";
 import Home from "@/pages/Home";
+import Task from "@/features/Task/Task";
 
 const routes = {
   "/": () => <Home />,
-  "/:userid/:taskid" : ({userid, taskid}) => <Counter userid={userid} taskid={taskid}></Counter>
+  "/:userid/:taskid" : ({userid, taskid}) => <Counter userid={userid} taskid={taskid}></Counter>,
+  "/task" : () => <Task />,
 };
 
 export function Router() {

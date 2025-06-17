@@ -10,8 +10,13 @@ import {
   Separator,
   Dialog,
 } from "@radix-ui/themes";
-import { PlusIcon, Cross2Icon, FaceIcon } from "@radix-ui/react-icons";
-import { addAgent, updateAgent } from "@/store/agents";
+import {
+  PlusIcon,
+  Cross2Icon,
+  FaceIcon,
+  Pencil2Icon,
+} from "@radix-ui/react-icons";
+import { addAgent, updateCurrentAgent } from "@/store/store";
 import { EmojiTabs } from "./EmojiTabs";
 import { EmojiPicker } from "./EmojiPicker";
 import {
@@ -22,7 +27,7 @@ import {
   ACTIVITIES,
   PLACES,
   NATURE,
-} from "../utils/emojis (1).js";
+} from "../../utils/emojis.js";
 
 function Formulaire({ onClose, agent, isEdit }) {
   const [title, setTitle] = useState(agent?.title || "");
@@ -56,11 +61,11 @@ function Formulaire({ onClose, agent, isEdit }) {
       response: desiredResponse,
       temperature,
       emoji: selectedEmoji,
-      id: agent?.id || Date.now().toString(),
+      id: agent?.id || null,
     };
 
     if (isEdit) {
-      updateAgent(newAgent);
+      updateCurrentAgent(newAgent);
     } else {
       addAgent(newAgent);
     }
@@ -88,14 +93,14 @@ function Formulaire({ onClose, agent, isEdit }) {
         boxSizing: "border-box",
       }}
     >
-      <Flex direction="row" justify="end" align="center">
+      <Flex direction="row" justify="end" align="center" height="5%">
         {onClose && (
           <Button variant="ghost" size="1" color="indigo" onClick={onClose}>
             <Cross2Icon width="22px" height="22px" />
           </Button>
         )}
       </Flex>
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="4" justify="between" height="95%">
         <Flex direction="row" gap="3" align="center">
           <Flex direction="column" gap="1" flex={1}>
             <Text as="label" weight="bold">
@@ -282,7 +287,11 @@ function Formulaire({ onClose, agent, isEdit }) {
         </Flex>
         <Separator my="2" />
         <Button onClick={handleSubmit} mt="2" color="indigo" size="3">
-          <PlusIcon />
+          {isEdit ? (
+            <Pencil2Icon height="22px" width="22px" />
+          ) : (
+            <PlusIcon height="22px" width="22px" />
+          )}
           {isEdit ? "Modifier l'agent" : "Ajouter l'agent"}
         </Button>
       </Flex>

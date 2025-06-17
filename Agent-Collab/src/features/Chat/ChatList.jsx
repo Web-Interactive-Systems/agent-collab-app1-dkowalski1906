@@ -20,7 +20,7 @@ function ChatList() {
   const messages = useStore($messages);
 
   return (
-    <Flex direction="column" gap="2">
+    <Flex direction="column" gap="2" style={{overflowY: "auto"}}>
       {messages.map((message) => (
         <Flex
           key={message.id}
@@ -51,7 +51,7 @@ function ChatList() {
               </Text>
             </Flex>
             <Flex>
-              <Text size="3" color="gray" truncate>
+              <Text size="3" color="gray">
                 {message.content}
               </Text>
             </Flex>

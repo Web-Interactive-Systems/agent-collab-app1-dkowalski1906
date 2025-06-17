@@ -1,7 +1,7 @@
 import { Resizable } from "@/components/Resizable";
-import Chat from "@/features/Chat";
+import Chat from "@/features/Chat/Chat";
 import { Flex } from "@radix-ui/themes";
-import Agent from "@/features/Agent";
+import Agent from "@/features/Agent/Agent";
 
 function Home() {
   return (
@@ -35,7 +35,7 @@ function Home() {
         width="30%"
         height="100%"
         style={{
-          borderLeft: "1px solid var(--gray-9)",
+          borderLeft: "2px solid var(--gray-9)",
           background: "var(--focus-a3)",
           minWidth: 0,
           minHeight: 0,
