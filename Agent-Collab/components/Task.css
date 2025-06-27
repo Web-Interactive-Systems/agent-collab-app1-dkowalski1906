@@ -1,0 +1,7 @@
+/* ...existing code... */
+.task-box {
+  width: var(--box-width);
+  height: var(--box-height);
+  /* ...existing code... */
+}
+/* ...existing code... */

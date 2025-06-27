@@ -28,6 +28,24 @@ export function Header({ isLight, switchAppearance }) {
         </Flex>
 
         <Flex justify="center" align="center" direction="row" gap="5">
+          <Button variant="ghost" size="3" asChild>
+            <Link href="/member">Membres</Link>
+          </Button>
+        </Flex>
+
+        <Flex justify="center" align="center" direction="row" gap="5">
+          <Button variant="ghost" size="3" asChild>
+            <Link href="/monitoring">Suivi</Link>
+          </Button>
+        </Flex>
+
+        <Flex justify="center" align="center" direction="row" gap="5">
+          <Button variant="ghost" size="3" asChild>
+            <Link href="/canvas">Canvas</Link>
+          </Button>
+        </Flex>
+
+        <Flex justify="center" align="center" direction="row" gap="5">
           <Button onClick={switchAppearance} variant="ghost" size="4">
             {isLight ? (
               <MoonIcon height="22" width="22" />

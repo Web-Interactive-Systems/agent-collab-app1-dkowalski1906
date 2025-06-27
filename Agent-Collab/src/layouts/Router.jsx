@@ -3,12 +3,20 @@ import { useEffect } from "react";
 import Counter from "@/components/Counter";
 import LayoutTheme from "./LayoutTheme";
 import Home from "@/pages/Home";
-import Task from "@/features/Task/Task";
+import Task from "@/pages/Task";
+import Member from "@/pages/Member";
+import Monitoring from "@/pages/Monitoring";
+import CanvasVue from "@/features/Task/CanvasVue";
 
 const routes = {
   "/": () => <Home />,
-  "/:userid/:taskid" : ({userid, taskid}) => <Counter userid={userid} taskid={taskid}></Counter>,
-  "/task" : () => <Task />,
+  "/:userid/:taskid": ({ userid, taskid }) => (
+    <Counter userid={userid} taskid={taskid}></Counter>
+  ),
+  "/task": () => <Task />,
+  "/member": () => <Member />,
+  "/monitoring": () => <Monitoring />,
+  "/canvas": () => <CanvasVue />
 };
 
 export function Router() {

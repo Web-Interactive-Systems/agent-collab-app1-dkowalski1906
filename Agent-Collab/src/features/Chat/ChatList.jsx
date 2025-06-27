@@ -1,9 +1,10 @@
 //import { Markdown } from "@/components/Markdown";
 import { FaceIcon, PersonIcon } from "@radix-ui/react-icons";
-import { Flex, Card, Text } from "@radix-ui/themes";
+import { Flex, Card, Text, Code } from "@radix-ui/themes";
 import { styled } from "@stitches/react";
 import { useStore } from "@nanostores/react";
 import { $messages } from "@/store/store";
+import { Markdown } from "@/components/Markdown";
 
 const ListContainer = styled(Card, {
   background: "Indigo",
@@ -20,7 +21,7 @@ function ChatList() {
   const messages = useStore($messages);
 
   return (
-    <Flex direction="column" gap="2" style={{overflowY: "auto"}}>
+    <Flex direction="column" gap="2" style={{ overflowY: "auto" }}>
       {messages.map((message) => (
         <Flex
           key={message.id}
@@ -31,8 +32,7 @@ function ChatList() {
             radius="large"
             width="auto"
             style={{
-              minWidth: 180,
-              maxWidth: 320,
+              width: "100%",
               padding: 8,
               display: "flex",
               flexDirection: "column",
@@ -51,9 +51,13 @@ function ChatList() {
               </Text>
             </Flex>
             <Flex>
-              <Text size="3" color="gray">
-                {message.content}
-              </Text>
+              {/* <Code size="3" weight="medium" style={{ width: "100%", background: "var(--gray-2)" }}>
+                <pre style={{ whiteSpace: "pre-wrap", wordBreak: "break-all", width: "100%", background: "var(--gray-2)" }}>
+                  {message.content}
+                </pre>
+              </Code> */}
+
+              <Markdown content={message.content} />
             </Flex>
           </Card>
         </Flex>

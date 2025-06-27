@@ -1,8 +1,9 @@
+import React from "react";
 import { Flex } from "@radix-ui/themes";
-import Chat from "../Chat/Chat";
-import TaskList from "./TaskList";
+import Chat from "../features/Chat/Chat";
+import DailyMeeting from "../features/Monitoring/DailyMeeting";
 
-function Task() {
+function Monitoring() {
   return (
     <>
       <Flex
@@ -29,7 +30,7 @@ function Task() {
             overflow: "hidden",
           }}
         >
-          <TaskList />
+          <DailyMeeting />
         </Flex>
         <Flex
           width="30%"
@@ -50,4 +51,4 @@ function Task() {
   );
 }
 
-export default Task;
+export default Monitoring;

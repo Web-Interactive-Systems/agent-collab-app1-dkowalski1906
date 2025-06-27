@@ -7,8 +7,8 @@ function Box({ task, onEditClick, isAdd, onAddClick }) {
     return (
       <div
         style={{
-          width: "240px",
-          height: "240px",
+          width: 250,
+          height: 250,
           margin: 0,
           padding: 0,
           boxSizing: "border-box",
@@ -53,11 +53,12 @@ function Box({ task, onEditClick, isAdd, onAddClick }) {
   return (
     <div
       style={{
-        width: "240px",
-        height: "240px",
+        width: 250,
+        height: 250,
         margin: 0,
         padding: 0,
         boxSizing: "border-box",
+        overflow: "auto",
       }}
     >
       <Card
@@ -65,8 +66,8 @@ function Box({ task, onEditClick, isAdd, onAddClick }) {
         size="3"
         radius="large"
         style={{
-          width: 240,
-          height: 240,
+          width: 250,
+          height: 250,
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
@@ -81,8 +82,26 @@ function Box({ task, onEditClick, isAdd, onAddClick }) {
           </Text>
         </Flex>
         <Flex direction="column" justify="between" style={{ flex: 1 }}>
-          <Text size="3" color="gray">
+          <Text size="3" color="gray" truncate>
             {task.description}
+          </Text>
+          <Text size="3" color="gray">
+            {task.assignedTo ? `Assigné à ${task.assignedTo}` : "Non assigné"}
+          </Text>
+          <Text size="3" color="gray">
+            {task.estimatedTime
+              ? `Durée estimée : ${task.estimatedTime} heures`
+              : "Pas de durée d'estimée"}
+          </Text>
+          <Text size="3" color="gray">
+            {task.realizedTime
+              ? `Durée réalisée : ${task.realizedTime} heures`
+              : "Pas de durée d'accomplie"}
+          </Text>
+          <Text size="3" color="gray">
+            {task.dueDate
+              ? `Date de fin : ${task.dueDate}`
+              : "Pas de date de fin"}
           </Text>
           <Flex
             justify="between"

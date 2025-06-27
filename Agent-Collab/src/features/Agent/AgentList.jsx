@@ -7,8 +7,8 @@ import { PlusIcon } from "@radix-ui/react-icons";
 function AgentList({ onAddClick, onEditClick }) {
   const cards = useStore($agents);
 
-  const BOX_WIDTH = 240;
-  const BOX_HEIGHT = 240;
+  const BOX_WIDTH = 250;
+  const BOX_HEIGHT = 250;
 
   return (
     <>
@@ -17,7 +17,9 @@ function AgentList({ onAddClick, onEditClick }) {
         gap="4"
         style={{ width: "100%", height: "100%" }}
       >
-        <Text size="7" weight="bold">Liste des agents</Text>
+        <Text size="7" weight="bold">
+          Liste des agents
+        </Text>
         <div
           style={{
             display: "flex",

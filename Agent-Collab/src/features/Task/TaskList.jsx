@@ -1,16 +1,25 @@
-import { Flex, Text } from "@radix-ui/themes";
-import TaskItem from "./TaskItem";
-import { useStore } from "@nanostores/react";
-import { $tasks, addTask, updateTask } from "@/store/tasks";
 import { useState } from "react";
+import { useStore } from "@nanostores/react";
+import { Button, Code, Flex, Spinner, Text, Tabs, Box } from "@radix-ui/themes";
+import { onAgent } from "@/actions/agent";
+import {
+  $agents,
+  $members,
+  $messages,
+  addMessage,
+  updateMessages,
+} from "@/store/store";
+import { $tasks, addTask, updateTask } from "@/store/tasks";
 import TaskForm from "./TaskForm";
+import ClassicVue from "./ClassicVue";
+import CanvasVue from "./CanvasVue";
 
 function TaskList() {
   const tasks = useStore($tasks);
-  const [formState, setFormState] = useState({ visible: false, task: null });
 
-  const handleAddClick = () => setFormState({ visible: true, task: null });
-  const handleEditClick = (task) => setFormState({ visible: true, task });
+  const [formState, setFormState] = useState({ visible: false, task: null });
+  const [loading, setLoading] = useState(false);
+
   const handleClose = () => setFormState({ visible: false, task: null });
 
   const handleSubmit = (task) => {
@@ -22,41 +31,212 @@ function TaskList() {
     handleClose();
   };
 
+  const handleAssignClick = async () => {
+    const chatAgents = $agents.get();
+
+    const agent = chatAgents.length > 0 ? chatAgents[0] : null;
+    const members = $members.get();
+
+    //création du prompt pour l'agent
+    const prompt = `
+    Liste des tâches :
+${tasks
+  .map((t) => `- [${parseInt(t.id)}] ${t.title} : ${t.description}`)
+  .join("\n")}
+
+Liste des membres :
+${members.map((m) => `- [${m.id}] ${m.name} (${m.job} ${m.level})`).join("\n")}
+    `;
+
+    // Ajouter un message "assistant" vide
+    const response = {
+      role: "assistant",
+      content: "",
+      id: Math.random().toString(),
+      completed: false,
+    };
+    addMessage(response);
+
+    if (agent) {
+      //ouverture popup
+      setLoading(true);
+
+      const stream = await onAgent({ agent, prompt });
+
+      let cloned = $messages.get();
+
+      //Création du stream et update des messages
+      for await (const part of stream) {
+        let token = part.choices[0]?.delta?.content ?? "";
+
+        const last = cloned.at(-1);
+        cloned[cloned.length - 1] = {
+          ...last,
+          content: last.content + token,
+        };
+
+        updateMessages([...cloned]);
+      }
+
+      // Extraction du JSON uniquement
+      const lastMessage = cloned.at(-1)?.content || "";
+      const match = lastMessage.match(/{[\s\S]*}/);
+      const cleanedResult = match ? match[0] : "";
+
+      const parsedResult = JSON.parse(cleanedResult);
+      for (const task of parsedResult.tasks) {
+        const existingTask = tasks.find((t) => t.id === task.taskId);
+
+        if (existingTask) {
+          // Met à jour la tâche existante avec les nouvelles informations
+          const member = members.find((m) => m.id === task.assignedToId);
+          existingTask.assignedTo = member ? member.name : "";
+          existingTask.estimatedTime = task.estimatedTime || null;
+          updateTask(existingTask);
+        }
+      }
+
+      //fermeture popup
+      setLoading(false);
+    }
+  };
+
+  const handleAnalyzeCommentsClick = async () => {
+    const chatAgents = $agents.get();
+    const agent = chatAgents.length > 0 ? chatAgents[2] : null;
+    const tasks = $tasks.get();
+
+    // Crée le prompt avec uniquement les commentaires
+    const prompt = `
+Voici la liste des tâches et leurs commentaires. Pour chacune, déduis le ton émotionnel ("humor") comme "positive" ou "negative", et justifie ton choix (champ "justification").
+
+${tasks
+  .map((t) => `- [${parseInt(t.id)}] ${t.title} : "${t.commentary}"`)
+  .join("\n")}
+`;
+
+    // Ajoute un message vide pour l'assistant
+    const response = {
+      role: "assistant",
+      content: "",
+      id: Math.random().toString(),
+      completed: false,
+    };
+    addMessage(response);
+
+    if (agent) {
+      setLoading(true);
+      const stream = await onAgent({ agent, prompt });
+
+      let cloned = $messages.get();
+
+      for await (const part of stream) {
+        const token = part.choices[0]?.delta?.content ?? "";
+        const last = cloned.at(-1);
+        cloned[cloned.length - 1] = {
+          ...last,
+          content: last.content + token,
+        };
+        updateMessages([...cloned]);
+      }
+
+      const lastMessage = cloned.at(-1)?.content || "";
+      const match = lastMessage.match(/\[\s*{[\s\S]*}\s*\]/); // extrait tableau JSON
+      const jsonStr = match ? match[0] : "[]";
+
+      try {
+        const analysis = JSON.parse(jsonStr);
+
+        for (const result of analysis) {
+          const task = tasks.find(
+            (t) => parseInt(t.id) === parseInt(result.id)
+          );
+          if (task) {
+            task.humor = result.humor;
+            task.justification = result.justification;
+            updateTask(task);
+          }
+        }
+      } catch (e) {
+        console.error("Erreur lors du parsing JSON :", e);
+      }
+
+      setLoading(false);
+    }
+  };
+
   return (
     <>
+      {loading && (
+        <Flex
+          position="absolute"
+          top="0"
+          left="0"
+          width="70%"
+          height="100%"
+          style={{
+            background: "rgba(10,10,20,0.92)",
+            zIndex: 100,
+            alignItems: "center",
+            justifyContent: "center",
+            overflow: "hidden",
+            display: "flex",
+          }}
+        >
+          <Flex align="center" gap="4">
+            <Spinner size="3" />
+            <Text size="3" weight="medium">
+              Attribution des tâches en cours...
+            </Text>
+          </Flex>
+        </Flex>
+      )}
+
       <Flex
         direction="column"
         gap="4"
         style={{ width: "100%", height: "100%", margin: "10px" }}
       >
-        <Text size="7" weight="bold">
-          Liste des tâches
-        </Text>
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            width: "100%",
-            height: "100%",
-            padding: 0,
-            margin: 0,
-            overflowY: "auto",
-            minHeight: 0,
-            minWidth: 0,
-            boxSizing: "border-box",
-            alignItems: "stretch",
-            gap: 12,
-          }}
-        >
-          <TaskItem isAdd onAddClick={handleAddClick} />
-          {tasks.map((task) => (
-            <TaskItem
-              key={task.id}
-              task={task}
-              onEditClick={() => handleEditClick(task)}
-            />
-          ))}
-        </div>
+        <Flex direction="column" gap="2" style={{ height: "100%" }}>
+          <Button
+            onClick={handleAssignClick}
+            size="2"
+            variant="solid"
+            style={{ width: "fit-content" }}
+          >
+            Attribuer les tâches
+          </Button>
+          <Button
+            onClick={handleAnalyzeCommentsClick}
+            size="2"
+            variant="solid"
+            style={{ width: "fit-content" }}
+          >
+            Commentaires
+          </Button>
+          <Flex
+            gap="4"
+            justify="between"
+            style={{ width: "100%", height: "100%" }}
+          >
+            <Tabs.Root defaultValue="account">
+              <Tabs.List>
+                <Tabs.Trigger value="list">Liste</Tabs.Trigger>
+                <Tabs.Trigger value="canvas">Canvas</Tabs.Trigger>
+              </Tabs.List>
+
+              <Box pt="3" style={{ overflow: "auto", height: "100%" }}>
+                <Tabs.Content value="list">
+                  <ClassicVue setFormState={setFormState} tasks={tasks} />
+                </Tabs.Content>
+
+                <Tabs.Content value="canvas">
+                  <CanvasVue />
+                </Tabs.Content>
+              </Box>
+            </Tabs.Root>
+          </Flex>
+        </Flex>
       </Flex>
 
       {formState.visible && (

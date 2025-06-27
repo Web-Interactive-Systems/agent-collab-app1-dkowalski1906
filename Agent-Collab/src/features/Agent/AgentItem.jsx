@@ -10,8 +10,8 @@ function Box({ agent, onEditClick }) {
       size="3"
       radius="large"
       style={{
-        width: 240,
-        height: 240,
+        width: 250,
+        height: 250,
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
@@ -31,10 +31,20 @@ function Box({ agent, onEditClick }) {
         </Text>
       </Flex>
       <Flex direction="column" justify="between" style={{ flex: 1 }}>
-        <Text size="3" color="gray">
-          {agent.role}
+        <Text
+          size="3"
+          color="gray"
+          style={{ overflow: "auto", maxHeight: "100px" }}
+        >
+          {agent.desired_response}
         </Text>
-        <Flex justify="between" align="end" mt="2" gap="4" style={{ marginTop: "20px" }}>
+        <Flex
+          justify="between"
+          align="end"
+          mt="2"
+          gap="4"
+          style={{ marginTop: "20px" }}
+        >
           {agent.locked && <LockClosedIcon></LockClosedIcon>}
           <Button
             variant="ghost"
