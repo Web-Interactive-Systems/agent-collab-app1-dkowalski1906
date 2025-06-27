@@ -71,7 +71,7 @@ class CardShapeUtil extends ShapeUtil<ICardShape> {
 		return {
 			w: 200,
 			h: 200,
-			color: 'red',
+			color: 'black',
 			fill: "solid",
 			title: "Titre",
 			description: "Description",

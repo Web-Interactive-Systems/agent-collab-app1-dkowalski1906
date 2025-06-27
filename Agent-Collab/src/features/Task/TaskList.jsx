@@ -101,70 +101,6 @@ ${members.map((m) => `- [${m.id}] ${m.name} (${m.job} ${m.level})`).join("\n")}
     }
   };
 
-  const handleAnalyzeCommentsClick = async () => {
-    const chatAgents = $agents.get();
-    const agent = chatAgents.length > 0 ? chatAgents[2] : null;
-    const tasks = $tasks.get();
-
-    // Crée le prompt avec uniquement les commentaires
-    const prompt = `
-Voici la liste des tâches et leurs commentaires. Pour chacune, déduis le ton émotionnel ("humor") comme "positive" ou "negative", et justifie ton choix (champ "justification").
-
-${tasks
-  .map((t) => `- [${parseInt(t.id)}] ${t.title} : "${t.commentary}"`)
-  .join("\n")}
-`;
-
-    // Ajoute un message vide pour l'assistant
-    const response = {
-      role: "assistant",
-      content: "",
-      id: Math.random().toString(),
-      completed: false,
-    };
-    addMessage(response);
-
-    if (agent) {
-      setLoading(true);
-      const stream = await onAgent({ agent, prompt });
-
-      let cloned = $messages.get();
-
-      for await (const part of stream) {
-        const token = part.choices[0]?.delta?.content ?? "";
-        const last = cloned.at(-1);
-        cloned[cloned.length - 1] = {
-          ...last,
-          content: last.content + token,
-        };
-        updateMessages([...cloned]);
-      }
-
-      const lastMessage = cloned.at(-1)?.content || "";
-      const match = lastMessage.match(/\[\s*{[\s\S]*}\s*\]/); // extrait tableau JSON
-      const jsonStr = match ? match[0] : "[]";
-
-      try {
-        const analysis = JSON.parse(jsonStr);
-
-        for (const result of analysis) {
-          const task = tasks.find(
-            (t) => parseInt(t.id) === parseInt(result.id)
-          );
-          if (task) {
-            task.humor = result.humor;
-            task.justification = result.justification;
-            updateTask(task);
-          }
-        }
-      } catch (e) {
-        console.error("Erreur lors du parsing JSON :", e);
-      }
-
-      setLoading(false);
-    }
-  };
-
   return (
     <>
       {loading && (
@@ -205,14 +141,6 @@ ${tasks
             style={{ width: "fit-content" }}
           >
             Attribuer les tâches
-          </Button>
-          <Button
-            onClick={handleAnalyzeCommentsClick}
-            size="2"
-            variant="solid"
-            style={{ width: "fit-content" }}
-          >
-            Commentaires
           </Button>
           <Flex
             gap="4"
